@@ -341,8 +341,8 @@ def logger_config(logger, config):
         fallback="%(levelname)s:%(asctime)s: %(message)s"))
     logstream = logging.StreamHandler()
     logstream.setFormatter(formatter)
-    logstream.setLevel(config.get("logging", "log_level_stdout", fallback=
-        "INFO"))
+    level = config.get("logging", "log_level_stdout", fallback="INFO")
+    logstream.setLevel(level)
     logger.addHandler(logstream)
     filename = config.get("logging", "log_file_location", fallback="")
     if len(filename.strip()) == 0:
@@ -350,9 +350,10 @@ def logger_config(logger, config):
     logfile = logging.FileHandler(filename, mode=('a' if
         config.get("logging", "append_log", fallback="false") else 'w'))
     logfile.setFormatter(formatter)
-    logfile.setLevel(logging.DEBUG)
+    logfile.setLevel(level)
     logger.addHandler(logfile)
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(level)
+    logger.info('Log level set to {}'.format(level))
     return logger, filename
 
 def main():
